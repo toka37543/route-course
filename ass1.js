@@ -70,6 +70,8 @@ console.log("Divisible by both")
 let squareFun = (number) => number * number;
 console.log(squareFun(5));
 
+
+// How to knwo that the person param is an object of name and age
 // question 10
 function formatPerson(person) {
     const { name, age } = person;
