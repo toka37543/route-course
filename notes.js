@@ -1,4 +1,5 @@
 const events = require('node:events');
+const fsPromise = require("node:fs/promises");
 
 const emitter = new events.EventEmitter();
 
@@ -31,3 +32,13 @@ emitter.off('sumEvent-on', listener);
 emitter.removeAllListeners();
 
 console.log(emitter.eventNames());
+
+
+//it is a new pakedge to make code asynch
+
+try {
+    await fsPromise.unlink(filePath);
+    console.log("File deleted");
+} catch (err) {
+    console.log("File deleted");
+}
