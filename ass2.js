@@ -331,7 +331,7 @@ function questionHttp() {
         const data = fs.readFileSync(usersFilePath);
         return JSON.parse(data) || [];
     }
-    const addUser = function (name,age,email) {
+    const addUser = function (name,email, age) {
         const userObj = {
             name: name, email: email, age: age
         };
@@ -341,8 +341,8 @@ function questionHttp() {
         return users;
     }
     const findUserById = function (id) {
-        const user = readUsers();
-        return user[id];
+        const users = readUsers();
+        return users[id];
     }
     const updateUser = function (id, age) {
         const users = readUsers();
@@ -358,7 +358,8 @@ function questionHttp() {
     }
     const deleteUser = function (id) {
         let users = readUsers();
-        users.splice(users.indexOf(id), 1);
+        delete users[id];
+        console.log(users);
         fs.writeFileSync(usersFilePath, JSON.stringify(users));
         return users;
     }
@@ -377,29 +378,30 @@ function questionHttp() {
             } catch (error) {
                 body = {};
             }
+            console.log(url,method)
             if (url === '/users' && method === 'GET') {
                 res.write(JSON.stringify(readUsers()));
                 res.end();
             }
 
             if (url === '/users' && method === 'POST') {
-                if (findUserByEmail(body.email)) {
+                if (findUserByEmail(body.email).length) {
                     res.write(JSON.stringify({
                         "message": "Email already exists!"
                     }));
+                    res.end()
+                } else {
+                    addUser(body.name, body.email, body.age);
+                    res.write(JSON.stringify({
+                        message: "User added successfully."
+                    }))
+                    res.end();
                 }
-
-                addUser(body.name, body.age, body.age);
-                res.write(JSON.stringify({
-                    message: "User added successfully."
-                }))
-                res.end();
             }
 
             const regex = /^\/users\/(\d+)$/;
             if (regex.test(url) && method === 'GET') {
-                console.log("/user/id")
-                const id = url.split('/')[1];
+                const id = url.split('/')[2];
                 const user = findUserById(id);
                 if (user) {
                     res.write(JSON.stringify(user));
@@ -412,7 +414,7 @@ function questionHttp() {
 
             if (regex.test(url) && method === 'PATCH') {
                 // update age of id
-                const id = url.split('/')[1];
+                const id = url.split('/')[2];
                 if (!findUserById(id)) {
                     res.write(JSON.stringify({
                         "message": "User not found"
@@ -425,10 +427,11 @@ function questionHttp() {
                 res.write(JSON.stringify({
                     "message":"Age updated"
                 }))
+                res.end()
             }
 
             if (regex.test(url) && method === 'DELETE') {
-                const id = url.split('/')[1];
+                const id = url.split('/')[2];
                 deleteUser(id)
                 res.write(JSON.stringify({
                     "message": "User deleted successfully."
@@ -436,10 +439,6 @@ function questionHttp() {
                 res.end();
             }
 
-
-
-            res.write("404 Not Found!");
-            res.end();
         })
 
     })
