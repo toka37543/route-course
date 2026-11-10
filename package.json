@@ -1,23 +1,19 @@
 {
-  "name": "route_ass5",
+  "name": "assignment5-sequelize",
   "version": "1.0.0",
-  "description": "",
+  "description": "Assignment 5 - users, posts and comments API using express and sequelize",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "node --watch index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.21.0",
-      "onFail": "download"
-    }
-  },
+  "type": "module",
   "dependencies": {
-    "express": "^5.2.1",
-    "mysql2": "^3.24.1"
+    "express": "^5.3.0",
+    "mysql2": "^3.24.6",
+    "sequelize": "^6.37.8"
   }
 }
